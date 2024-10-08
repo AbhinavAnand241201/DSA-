@@ -1,0 +1,62 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {  // Changed class name to Solution
+
+    public int expressiveWords(String s, String[] words) {
+        int count = 0;
+        
+        List<int[]> sGroups = getCharGroups(s);
+        
+        for (String word : words) {
+            List<int[]> wordGroups = getCharGroups(word);
+            if (isStretchy(sGroups, wordGroups)) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+
+    private List<int[]> getCharGroups(String str) {
+        List<int[]> groups = new ArrayList<>();
+        int i = 0;
+        
+        while (i < str.length()) {
+            char ch = str.charAt(i);
+            int start = i;
+            
+            while (i < str.length() && str.charAt(i) == ch) {
+                i++;
+            }
+            
+            groups.add(new int[]{ch, i - start});
+        }
+        
+        return groups;
+    }
+
+    private boolean isStretchy(List<int[]> sGroups, List<int[]> wordGroups) {
+        if (sGroups.size() != wordGroups.size()) {
+            return false;
+        }
+        
+        for (int i = 0; i < sGroups.size(); i++) {
+            int[] sGroup = sGroups.get(i);
+            int[] wordGroup = wordGroups.get(i);
+            
+            if (sGroup[0] != wordGroup[0]) {
+                return false;
+            }
+            
+            int sCount = sGroup[1];
+            int wordCount = wordGroup[1];
+            
+            if (wordCount != sCount && ( sCount < 3|| wordCount>sCount)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
