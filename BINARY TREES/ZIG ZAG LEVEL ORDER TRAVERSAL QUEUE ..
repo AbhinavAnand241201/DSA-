@@ -1,0 +1,35 @@
+import java.util.*;
+
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int flag = 0;  // 0 means left to right, 1 means right to left
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>(Collections.nCopies(size, 0)); // Pre-initialize the list to handle the index
+            
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                
+                if (flag == 0) {
+                    level.set(i, node.val);  
+                } else {
+                    level.set(size - 1 - i, node.val);  
+                }
+
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+            
+            res.add(level);  // Add the level list after processing the entire level
+            flag = 1 - flag;  // Toggle flag for zigzag order
+        }
+        
+        return res;
+    }
+}
