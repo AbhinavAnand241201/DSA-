@@ -1,0 +1,39 @@
+BRUTE FORCE CODE
+
+
+
+class Solution {
+    public int minFallingPathSum(int[][] matrix) {
+        int n = matrix.length;
+        int[][] memo = new int[n][n];
+        
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
+        }
+
+        int minSum = Integer.MAX_VALUE;
+
+        for (int col = 0; col < n; col++) {
+            minSum = Math.min(minSum, helper(matrix, 0, col, memo));
+        }
+
+        return minSum;
+    }
+
+    private int helper(int[][] matrix, int row, int col, int[][] memo) {
+        int n = matrix.length;
+
+        if (col < 0 || col >= n) return Integer.MAX_VALUE;
+        if (row == n - 1) return matrix[row][col];
+        if (memo[row][col] != -1) return memo[row][col];
+
+        int down = helper(matrix, row + 1, col, memo);
+        int downLeft = col > 0 ? helper(matrix, row + 1, col - 1, memo) : Integer.MAX_VALUE;
+        int downRight = col < n - 1 ? helper(matrix, row + 1, col + 1, memo) : Integer.MAX_VALUE;
+
+        memo[row][col] = matrix[row][col] + Math.min(down, Math.min(downLeft, downRight));
+
+        return memo[row][col];
+    }
+}
+
