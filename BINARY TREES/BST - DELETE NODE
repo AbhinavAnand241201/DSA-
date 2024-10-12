@@ -1,0 +1,49 @@
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        
+        // Find the node with the key
+        if (key < root.val) {
+            root.left = deleteNode(root.left, key);  // Recur on left subtree
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key); // Recur on right subtree
+        } else {
+            // Node with the key is found
+            
+            // If no right subtree, return the left subtree as the new root
+            if (root.right == null) {
+                return root.left;
+            }
+            
+            // Store the right subtree
+            TreeNode rightSubtree = root.right;
+            
+            // Traverse the left subtree to find the farthest right node
+            TreeNode leftSubtree = root.left;
+            if (leftSubtree != null) {
+                TreeNode farthestRight = findFarthestRight(leftSubtree);
+                
+                // Attach the right subtree to the farthest right node of the left subtree
+                farthestRight.right = rightSubtree;
+                
+                // Return the left subtree as the new root
+                return leftSubtree;
+            } else {
+                // If there's no left subtree, return the right subtree
+                return rightSubtree;
+            }
+        }
+
+        return root;
+    }
+
+    // Helper function to find the farthest right node in a subtree
+    private TreeNode findFarthestRight(TreeNode node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+}
